@@ -151,6 +151,37 @@
             $('#nf-folder-id').val(folderId);
         })
     </script>
+
+
+    <script>
+    $('#registerForm').submit(function(e){
+        e.preventDefault();
+        $.ajax({
+            url:'ajax/register.php',
+            type: 'POST',
+            data : new FormData(this),
+            contentType: false,
+            processData: false,
+            cache: false,
+            beforeSend: function() {
+                $('#spinner').show();
+                $('#result').hide();
+                $('#btnText').hide();
+            },
+            success: function(data){
+                if (data == 1) {
+                    location.href = 'register-pattern';
+                }
+                else{
+                    $('#result').html(data);
+                    $('#result').fadeIn();
+                    $('#spinner').hide();
+                    $('#btnText').show();
+                }
+            }
+        })
+    })
+</script>
 </body>
 
 </html>

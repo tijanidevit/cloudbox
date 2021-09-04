@@ -1,7 +1,7 @@
 <?php 
     session_start();    
     if (!isset($_SESSION['cloud_user'])) {
-        header('location: login');
+        header('location: ./login');
     }
 ?>
 <!doctype html>

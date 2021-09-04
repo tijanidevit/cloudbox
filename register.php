@@ -46,7 +46,16 @@
                                 </div>
 
                             </div>
-                            <button type="submit" class="btn btn-primary">Sign In</button>
+                            <button type="submit" class="btn btn-primary">
+                                <span class="spinner" id="spinner" style="display: none;">
+                                    <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
+                                    <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
+                                    <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
+                                </span>
+                                <span class="btnText">
+                                    Register
+                                </span>
+                            </button>
                             <p class="mt-3">
                                 Already have an account <a href="./login" class="text-primary">Sign In</a>
                             </p>
@@ -61,3 +70,30 @@
 </body>
 
 </html>
+<script>
+    $('#registerForm').submit(function(e){
+        e.preventDefault();
+        $.ajax({
+            url:'ajax/register.php',
+            type: 'POST',
+            data : $(this).serialize(),
+            cache: false,
+            beforeSend: function() {
+                $('#spinner').show();
+                $('#result').hide();
+                $('#btnText').hide();
+            },
+            success: function(data){
+                if (data == 1) {
+                    location.href = 'home';
+                }
+                else{
+                    $('#result').html(data);
+                    $('#result').fadeIn();
+                    $('#spinner').hide();
+                    $('#btnText').show();
+                }
+            }
+        })
+    })
+</script>
