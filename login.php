@@ -1,3 +1,9 @@
+<?php 
+    session_start();    
+    if (isset($_SESSION['cloud_user'])) {
+        header('location: ./home');
+    }
+?>
 <!doctype html>
 <html lang="en">
 
@@ -24,17 +30,18 @@
                         <img src="./assets/images/logo-white.png" class="img-fluid rounded-normal darkmode-logo logo" alt="logo">
                         <h3 class="mb-3">Sign In</h3>
                         <p>Login to stay connected.</p>
-                        <form action="home" method="post">
+                        <form id="loginForm" method="post">
+                            <div id="result"></div>
                             <div class="row">
                                 <div class="col-lg-12">
                                     <div class="floating-label form-group">
-                                        <input class="floating-input form-control" type="email" placeholder=" ">
+                                        <input name="email" class="floating-input form-control" type="email" placeholder=" ">
                                         <label>Email</label>
                                     </div>
                                 </div>
                                 <div class="col-lg-12">
                                     <div class="floating-label form-group">
-                                        <input class="floating-input form-control" type="password" placeholder=" ">
+                                        <input name="password" class="floating-input form-control" type="password" placeholder=" ">
                                         <label>Password</label>
                                     </div>
                                 </div>
@@ -46,7 +53,16 @@
                                 </div>
 
                             </div>
-                            <button type="submit" class="btn btn-primary">Sign In</button>
+                            <button type="submit" class="btn btn-primary">
+                                <span class="spinner" id="spinner" style="display: none;">
+                                    <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
+                                    <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
+                                    <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
+                                </span>
+                                <span class="btnText">
+                                    Sign In
+                                </span>
+                            </button>
                             <p class="mt-3">
                                 Create an Account <a href="./register" class="text-primary">Sign Up</a>
                             </p>
@@ -62,10 +78,10 @@
 
 </html>
 <script>
-    $('#registerForm').submit(function(e){
+    $('#loginForm').submit(function(e){
         e.preventDefault();
         $.ajax({
-            url:'ajax/logout.php',
+            url:'ajax/login.php',
             type: 'POST',
             data : $(this).serialize(),
             cache: false,

@@ -1,3 +1,9 @@
+<?php 
+    session_start();    
+    if (isset($_SESSION['cloud_user'])) {
+        header('location: ./home');
+    }
+?>
 <!doctype html>
 <html lang="en">
 

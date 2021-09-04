@@ -15,7 +15,7 @@
 
 			$email = $_POST['email'];
 			$fullname = $_POST['fullname'];
-			$password = $_POST['password'];
+			$password = md5($_POST['password']);
 
 
 			if ($user_obj->check_email_existence($email)) {
