@@ -24,23 +24,24 @@
                         <img src="./assets/images/logo-white.png" class="img-fluid rounded-normal darkmode-logo logo" alt="logo">
                         <h3 class="mb-3">Sign Up</h3>
                         <p>Login to stay connected.</p>
-                        <form action="home" method="post">
+                        <form id="registerForm" method="post">
+                            <div id="result"></div>
                             <div class="row">
                                 <div class="col-lg-12">
                                     <div class="floating-label form-group">
-                                        <input class="floating-input form-control" type="text" placeholder=" ">
+                                        <input class="floating-input form-control" name="fullname" type="text" placeholder=" ">
                                         <label>Fullname</label>
                                     </div>
                                 </div>
                                 <div class="col-lg-12">
                                     <div class="floating-label form-group">
-                                        <input class="floating-input form-control" type="email" placeholder=" ">
+                                        <input class="floating-input form-control" type="email" name="email" placeholder=" ">
                                         <label>Email</label>
                                     </div>
                                 </div>
                                 <div class="col-lg-12">
                                     <div class="floating-label form-group">
-                                        <input class="floating-input form-control" type="password" placeholder=" ">
+                                        <input class="floating-input form-control" type="password" name="password" placeholder=" ">
                                         <label>Password</label>
                                     </div>
                                 </div>

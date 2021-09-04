@@ -1,7 +1,7 @@
 <?php
     class DB {
         public $host = 'localhost';
-        public $dbname = 'chit_chat';
+        public $dbname = 'deduplication';
         public $password = '';
         public $username = 'root';
         

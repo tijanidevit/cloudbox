@@ -7,25 +7,24 @@
 	{
 		$session = new Session();
 		$user_obj = new Users();
-		if (isset($_POST['username'])) {
+		if (isset($_POST['email'])) {
 
-			if (!isset($_POST['gender']) || empty($_POST['gender']) ) {
-				return displayWarning('Gender is required and cannot be empty');
+			if (!isset($_POST['password']) || empty($_POST['password']) ) {
+				return displayWarning('password is required and cannot be empty');
 			}
 
-			$username = $_POST['username'];
+			$email = $_POST['email'];
 			$fullname = $_POST['fullname'];
-			$gender = $_POST['gender'];
+			$password = $_POST['password'];
 
 
-			if ($user_obj->check_username_existence($username)) {
-				return displayWarning($username.' has already been registered. Try a unique one');
+			if ($user_obj->check_email_existence($email)) {
+				return displayWarning($email.' has already been registered. Try a unique one');
 			}
 			
-			$image = upload_file($_FILES['image'],'../uploads/images/');
-			if ($user_obj->register($username,$fullname,$gender,$image)) {
-				$user = $user_obj->fetch_user($username);
-				$session->create_session('chit_user',$user);
+			if ($user_obj->register($fullname,$email,$password)) {
+				$user = $user_obj->fetch_user($email);
+				$session->create_session('cloud_user',$user);
 				return 1;
 			}
 			else{
