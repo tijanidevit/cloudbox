@@ -3,6 +3,18 @@
     if (!isset($_SESSION['cloud_user'])) {
         header('location: ./login');
     }
+    include_once 'core/users.class.php';
+    $user_obj = new Users();
+
+    $user = $_SESSION['cloud_user'];
+    $user_names = explode(' ', $user['fullname']);
+    $user_id = $user['id'];
+
+    $user_folders_count = $user_obj->user_folders_num($user_id);
+    $user_files_count = $user_obj->user_files_num($user_id);
+    $user_quick_access = $user_obj->fetch_limited_user_folders($user_id,2);
+    $user_folders = $user_obj->fetch_limited_user_folders($user_id,4);
+    $user_files = $user_obj->fetch_limited_user_files($user_id,4);
 ?>
 <!doctype html>
 <html lang="en">
@@ -63,8 +75,8 @@
                             <div class="card-body property2-content">
                                 <div class="d-flex flex-wrap align-items-center">
                                     <div class="col-lg-6 col-sm-6 p-0">
-                                        <h3 class="mb-3">Welcome Penny</h3>
-                                        <p class="mb-5">You have 32 new notifications and 23 unread messages to reply</p>
+                                        <h3 class="mb-3">Welcome <?php echo $user_names[0] ?></h3>
+                                        <p class="mb-5">You have <?php echo $user_folders_count ?> folders created and  <?php echo $user_files_count ?> files uploaded</p>
                                     </div>
                                 </div>
                             </div>

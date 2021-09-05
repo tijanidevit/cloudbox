@@ -38,17 +38,34 @@
             }
         }
 
-        ###### user's Assignment_submissions
-        function user_assignments_num($user_id){
-            return DB::num_row("SELECT id FROM assignment_submissions WHERE user_id = ? ",[$user_id]);
+        ###### user's folders
+        function user_folders_num($user_id){
+            return DB::num_row("SELECT id FROM user_folders WHERE user_id = ? ",[$user_id]);
         }
 
-        function fetch_user_assignment_submissions($user_id){
-            return DB::fetchAll("SELECT *,assignment_submissions.id FROM assignment_submissions
-            JOIN assignments on assignments.id = assignment_submissions.assignment_id
-            JOIN courses on courses.id = assignments.course_id
-            WHERE assignment_submissions.user_id = ?
-            ORDER BY assignment_submissions.id DESC ",[$user_id]);
+        function fetch_user_folders($user_id){
+            return DB::fetchAll("SELECT *,folders.id FROM user_folders WHERE user_id = ?
+            ORDER BY id DESC ",[$user_id]);
+        }
+
+        function fetch_limited_user_folders($user_id,$limit){
+            return DB::fetchAll("SELECT *,folders.id FROM user_folders WHERE user_id = ?
+            ORDER BY id DESC LIMIT $limit ",[$user_id]);
+        }
+
+
+        function user_files_num($user_id){
+            return DB::num_row("SELECT id FROM user_files WHERE user_id = ? ",[$user_id]);
+        }
+
+        function fetch_user_files($user_id){
+            return DB::fetchAll("SELECT *,files.id FROM user_files WHERE user_id = ?
+            ORDER BY id DESC ",[$user_id]);
+        }
+
+        function fetch_limited_user_files($user_id,$limit){
+            return DB::fetchAll("SELECT *,files.id FROM user_files WHERE user_id = ?
+            ORDER BY id DESC LIMIT $limit ",[$user_id]);
         }
     }
 ?>
