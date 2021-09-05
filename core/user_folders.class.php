@@ -50,5 +50,9 @@
             WHERE user_folder_id = ?
             ORDER BY folder_files.id DESC ",[$user_folder_id]);
         }
+
+        function add_folder_file($user_file_id,$user_folder_id){
+            return DB::execute("INSERT INTO folder_files(user_file_id,user_folder_id) VALUES(?,?)", [$user_file_id,$user_folder_id]);
+        }
     }
 ?>

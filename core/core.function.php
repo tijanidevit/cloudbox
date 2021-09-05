@@ -1,6 +1,5 @@
 <?php
-        use PHPMailer\PHPMailer\PHPMailer;
-        use PHPMailer\PHPMailer\SMTP;
+
 	function upload_file($file,$path)
 	{
 		$file_name = rand(1000,9999).'-'.$file['name'];
@@ -59,18 +58,18 @@
 		$files = array_diff(scandir($path), array('.', '..'));
 		return $files;
 	}
-	
+
 	function check_file_existence($path, $_file){
 		$existing_files = getFolderFiles($path);
 
 		foreach ($existing_files as $file) {
 			if (file_get_contents($path.'/'.$file) == file_get_contents($_file['tmp_name'])){
-				return false;
+				return [true, $file];
 
 			}
 		}
 
-		return true;
+		return [false,''];
 	}
 
 	function format_date($date){
