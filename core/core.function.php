@@ -49,6 +49,30 @@
 		echo $ext;
 	}
 
+	function getFileSize($path){
+		$filesize = filesize($path); // bytes
+		$filesize = round($filesize / 1024 / 1024, 1); // megabytes with 1 digit
+		echo $filesize.'MB';
+	}
+
+	function getFolderFiles($path){
+		$files = array_diff(scandir($path), array('.', '..'));
+		return $files;
+	}
+	
+	function check_file_existence($path, $_file){
+		$existing_files = getFolderFiles($path);
+
+		foreach ($existing_files as $file) {
+			if (file_get_contents($path.'/'.$file) == file_get_contents($_file['tmp_name'])){
+				return false;
+
+			}
+		}
+
+		return true;
+	}
+
 	function format_date($date){
 		return date('F d, Y', strtotime($date));
 	}

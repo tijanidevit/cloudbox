@@ -60,7 +60,7 @@
                                     </div>
                                 </div>
                                 <div class="card-header-toolbar d-flex align-items-center">
-                                    <a href="#" data-folder-id="3" data-toggle="modal" data-target="#new-file-modal" id="init-new-file-modal" class="btn btn-sm btn-primary"><i class="ri-file-upload-line pr-3"></i>Upload File</a>
+                                    <a href="#" data-folder-id="<?php echo $folder_id ?>" data-toggle="modal" data-target="#new-file-modal" id="init-new-file-modal" class="btn btn-sm btn-primary"><i class="ri-file-upload-line pr-3"></i>Upload File</a>
                                 </div>
                             </div>
                         </div>
@@ -110,7 +110,7 @@
                                         <div class="modal-body">
                                             <ul class="list-group">
                                                 <li class="list-group-item"><b>File Name: </b><span id="file-filename"><?php echo $file['title'] ?></span></li>
-                                                <li class="list-group-item"><b>File Size: </b><span id="file-size">20kb</span></li>
+                                                <li class="list-group-item"><b>File Size: </b><span id="file-size"><?php getFileSize('./uploads/'.$file["file"]) ?></span></li>
                                                 <li class="list-group-item"><b>Date Uploaded: </b><span id="file-date-uploaded"><?php echo format_date($file['created_at']) ?></span></li>
                                                 <li class="list-group-item"><b>Visibility: </b><span id="file-visibility">Public</span> <a href="change-visibility"><i class="fa fa-eye"></i></a></li>
                                                 <li class="list-group-item"><b>URL: </b> <input type="text" id="file-url" value="https://ddjjkwd" class="form-control"> </li>
@@ -147,10 +147,10 @@
 
 
     <script>
-    $('#registerForm').submit(function(e){
+    $('#fileForm').submit(function(e){
         e.preventDefault();
         $.ajax({
-            url:'ajax/register.php',
+            url:'ajax/add_folder_file.php',
             type: 'POST',
             data : new FormData(this),
             contentType: false,
@@ -162,15 +162,17 @@
                 $('#btnText').hide();
             },
             success: function(data){
-                if (data == 1) {
-                    location.href = 'register-pattern';
+                
+                $('#result').html(data);
+                $('#result').fadeIn();
+                $('#spinner').hide();
+                $('#btnText').show();
+
+                if (data.includes('Success')) {
+                    location.reload();
                 }
-                else{
-                    $('#result').html(data);
-                    $('#result').fadeIn();
-                    $('#spinner').hide();
-                    $('#btnText').show();
-                }
+
+                console.log(data);
             }
         })
     })

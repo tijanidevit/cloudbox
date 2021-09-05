@@ -8,15 +8,16 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form action="./folder?id=3" method="post" enctype="multipart/form-data">
-                    <input type="hidden" id="nf-folder-id" placeholder="This has been handled">
+                <form id="fileForm" enctype="multipart/form-data">
+                    <div id="result"></div>
+                    <input type="hidden" name="folder_id" id="nf-folder-id" placeholder="This has been handled">
                     <div class="form-group">
                         <label for="">File Title</label>
                         <input type="text" name="title" class="form-control" required="required" />
                     </div>
                     <div class="form-group">
                         <label for="">File</label>
-                        <input type="file" name="files[]" class="form-control" required="required" multiple />
+                        <input type="file" name="file" class="form-control" required="required" />
                     </div>
                     <div class="form-group text-center">
                         <button type="submit" class="btn btn-primary">Submit</button>

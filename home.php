@@ -159,7 +159,7 @@
                                         <div class="modal-body">
                                             <ul class="list-group">
                                                 <li class="list-group-item"><b>File Name: </b><span id="file-filename"><?php echo $file['title'] ?></span></li>
-                                                <li class="list-group-item"><b>File Size: </b><span id="file-size">20kb</span></li>
+                                                <li class="list-group-item"><b>File Size: </b><span id="file-size"><?php getFileSize('./uploads/'.$file["file"]) ?></span></li>
                                                 <li class="list-group-item"><b>Date Uploaded: </b><span id="file-date-uploaded"><?php echo format_date($file['created_at']) ?></span></li>
                                                 <li class="list-group-item"><b>Visibility: </b><span id="file-visibility">Public</span> <a href="change-visibility"><i class="fa fa-eye"></i></a></li>
                                                 <li class="list-group-item"><b>URL: </b> <input type="text" id="file-url" value="https://ddjjkwd" class="form-control"> </li>
