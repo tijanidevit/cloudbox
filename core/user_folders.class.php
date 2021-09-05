@@ -40,11 +40,13 @@
 
         ###### user_folder's folders
         function user_folder_files_num($user_folder_id){
-            return DB::num_row("SELECT id FROM user_folder_files WHERE user_folder_id = ? ",[$user_folder_id]);
+            return DB::num_row("SELECT id FROM folder_files WHERE user_folder_id = ? ",[$user_folder_id]);
         }
 
         function fetch_user_folder_files($user_folder_id){
             return DB::fetchAll("SELECT *,folders.id FROM user_folder_files WHERE user_folder_id = ?
+            JOIN user_files ON user_files.id = user_folder_files.user_file_id
+            JOIN files ON files.id = user_files.file_id
             ORDER BY id DESC ",[$user_folder_id]);
         }
     }

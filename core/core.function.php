@@ -27,8 +27,30 @@
 		return $files_d;
 	}
 
+	function getFileType($file){
+		$file_names = explode('.', $file);
+		$ext = $file_names[1];
+		if ($ext == 'jpg' || $ext == 'png' || $ext == 'gif' || $ext == 'svg') {
+			return 'jpg';
+		}
+		if ($ext == 'mp4' || $ext == '3gp') {
+			return 'mp4';
+		}
+		if ($ext != 'doc' && $ext != 'pdf' && $ext != 'ppt' && $ext != 'xlxs') {
+			return 'doc';
+		}
+
+		return $ext;
+	}
+
+	function getRealFileType($file){
+		$file_names = explode('.', $file);
+		$ext = $file_names[1];
+		echo $ext;
+	}
+
 	function format_date($date){
-		return date('F d, Y h:mA', strtotime($date));
+		return date('F d, Y', strtotime($date));
 	}
 	function redirect($link){
 		header("location:".$link);

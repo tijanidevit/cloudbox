@@ -44,12 +44,12 @@
         }
 
         function fetch_user_folders($user_id){
-            return DB::fetchAll("SELECT *,folders.id FROM user_folders WHERE user_id = ?
+            return DB::fetchAll("SELECT * FROM user_folders WHERE user_id = ?
             ORDER BY id DESC ",[$user_id]);
         }
 
         function fetch_limited_user_folders($user_id,$limit){
-            return DB::fetchAll("SELECT *,folders.id FROM user_folders WHERE user_id = ?
+            return DB::fetchAll("SELECT * FROM user_folders WHERE user_id = ?
             ORDER BY id DESC LIMIT $limit ",[$user_id]);
         }
 
@@ -59,13 +59,17 @@
         }
 
         function fetch_user_files($user_id){
-            return DB::fetchAll("SELECT *,files.id FROM user_files WHERE user_id = ?
-            ORDER BY id DESC ",[$user_id]);
+            return DB::fetchAll("SELECT *,files.id FROM user_files
+            JOIN files on files.id = user_files.file_id    
+            WHERE user_id = ?
+            ORDER BY user_files.id DESC ",[$user_id]);
         }
 
         function fetch_limited_user_files($user_id,$limit){
-            return DB::fetchAll("SELECT *,files.id FROM user_files WHERE user_id = ?
-            ORDER BY id DESC LIMIT $limit ",[$user_id]);
+            return DB::fetchAll("SELECT *,files.id FROM user_files 
+            JOIN files on files.id = user_files.file_id
+            WHERE user_id = ?
+            ORDER BY user_files.id DESC LIMIT $limit ",[$user_id]);
         }
     }
 ?>

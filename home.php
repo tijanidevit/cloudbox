@@ -4,7 +4,10 @@
         header('location: ./login');
     }
     include_once 'core/users.class.php';
+    include_once 'core/user_folders.class.php';
+    include_once 'core/core.function.php';
     $user_obj = new Users();
+    $user_folder_obj = new User_folders();
 
     $user = $_SESSION['cloud_user'];
     $user_names = explode(' ', $user['fullname']);
@@ -91,26 +94,22 @@
                             </div>
                             <div class="card-body">
                                 <ul class="list-inline p-0 mb-0 row align-items-center">
-                                    <li class="col-lg-6 col-sm-6 mb-3 mb-sm-0">
-                                        <a href="#" data-file-id="3" class="load-file-modal" data-toggle="modal" data-target="#file-modal">
-                                            <div data-load-file="file" style="cursor: pointer;" class="p-2 text-center border rounded">
-                                                <div>
-                                                    <img src="./assets/images/layouts/mydrive/folder-1.png" class="img-fluid mb-1" alt="image1">
-                                                </div>
-                                                <p class="mb-0">Planning</p>
-                                            </div>
-                                        </a>
-                                    </li>
-                                    <li class="col-lg-6 col-sm-6">
-                                        <a href="#" data-file-id="3" class="load-file-modal" data-toggle="modal" data-target="#file-modal">
-                                            <div data-load-file="file" style="cursor: pointer;" class="p-2 text-center border rounded">
-                                                <div>
-                                                    <img src="./assets/images/layouts/mydrive/folder-2.png" class="img-fluid mb-1" alt="image2">
-                                                </div>
-                                                <p class="mb-0">Wireframe</p>
-                                            </div>
-                                        </a>
-                                    </li>
+                                    <?php if ($user_folders_count == 0): ?>
+                                        No Data Available Yet!
+                                    <?php else: ?>
+                                        <?php foreach ($user_quick_access as $folder): ?>
+                                            <li class="col-lg-6 col-sm-6 mb-3 mb-sm-0">
+                                                <a href="folder?id=<?php echo $folder['id'] ?>" >
+                                                    <div data-load-file="file" style="cursor: pointer;" class="p-2 text-center border rounded">
+                                                        <div>
+                                                            <img src="./assets/images/layouts/mydrive/folder-1.png" class="img-fluid mb-1" alt="image1">
+                                                        </div>
+                                                        <p class="mb-0"><?php echo $folder['folder_name'] ?></p>
+                                                    </div>
+                                                </a>
+                                            </li>
+                                        <?php endforeach ?>
+                                    <?php endif ?>
                                 </ul>
                             </div>
                         </div>
@@ -127,59 +126,60 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-3 col-md-6 col-sm-6">
-                        <div class="card card-block card-stretch card-height">
-                            <div class="card-body image-thumb">
+                    <?php if ($user_files_count == 0): ?>
+                        <div class="col-lg-12 mb-2 mt-0 col-md-12 col-sm-12">
+                            You have not uploaded any files yet!
+                        </div>
+                    <?php else: ?>
+                        <?php foreach ($user_files as $file): ?>
+                            <div class="col-lg-3 col-md-6 col-sm-6">
+                                <div class="card card-block card-stretch card-height">
+                                    <div class="card-body image-thumb">
 
-                                <a href="./file?id=2" data-file-id="3" class="load-file-modal" data-toggle="modal" data-target="#file-modal">
-                                    <div class="mb-4 text-center p-3 rounded iq-thumb">
-                                        <div class="iq-image-overlay"></div>
-                                        <img src="./assets/images/layouts/page-1/pdf.png" class="img-fluid" alt="image1">
+                                        <a href="./file?id=<?php echo $file['id'] ?>" data-file-id="<?php echo $file['id'] ?>" class="load-file-modal" data-toggle="modal" data-target="#file-modal<?php echo $file['id'] ?>">
+                                            <div class="mb-4 text-center p-3 rounded iq-thumb">
+                                                <div class="iq-image-overlay"></div>
+                                                <img src="./assets/images/layouts/page-1/<?php echo getFileType($file['file']) ?>.png" class="img-fluid" alt="image1">
+                                            </div>
+                                            <h6><?php echo $file['title'] ?>.<?php getRealFileType($file['file']) ?></h6>
+                                        </a>
                                     </div>
-                                    <h6>Terms.pdf</h6>
-                                </a>
+                                </div>
                             </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-3 col-md-6 col-sm-6">
-                        <div class="card card-block card-stretch card-height">
-                            <div class="card-body image-thumb">
-                                <a href="./file?id=2" data-file-id="3" class="load-file-modal" data-toggle="modal" data-target="#file-modal">
-                                    <div class="mb-4 text-center p-3 rounded iq-thumb">
-                                        <div class="iq-image-overlay"></div>
-                                        <img src="./assets/images/layouts/page-1/doc.png" class="img-fluid" alt="image1">
+
+                            <div class="modal fade" id="file-modal<?php echo $file['id'] ?>" tabindex="-1" role="dialog" aria-labelledby="file-modalTitle" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="fileModalTitle">File</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <ul class="list-group">
+                                                <li class="list-group-item"><b>File Name: </b><span id="file-filename"><?php echo $file['title'] ?></span></li>
+                                                <li class="list-group-item"><b>File Size: </b><span id="file-size">20kb</span></li>
+                                                <li class="list-group-item"><b>Date Uploaded: </b><span id="file-date-uploaded"><?php echo format_date($file['created_at']) ?></span></li>
+                                                <li class="list-group-item"><b>Visibility: </b><span id="file-visibility">Public</span> <a href="change-visibility"><i class="fa fa-eye"></i></a></li>
+                                                <li class="list-group-item"><b>URL: </b> <input type="text" id="file-url" value="https://ddjjkwd" class="form-control"> </li>
+                                                <li class="list-group-item">
+                                                    <a href="./uploads/<?php echo $file['file'] ?>" download id="file-download-link" class="btn btn-primary btn-block">
+                                                        Download <i class="fa fa-download"></i>
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </div>
                                     </div>
-                                    <h6>New-one.docx</h6>
-                                </a>
+                                </div>
                             </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-3 col-md-6 col-sm-6">
-                        <div class="card card-block card-stretch card-height">
-                            <div class="card-body image-thumb">
-                                <a href="./file?id=2" data-file-id="3" class="load-file-modal" data-toggle="modal" data-target="#file-modal">
-                                    <div class="mb-4 text-center p-3 rounded iq-thumb">
-                                        <div class="iq-image-overlay"></div>
-                                        <img src="./assets/images/layouts/page-1/xlsx.png" class="img-fluid" alt="image1">
-                                    </div>
-                                    <h6>Woo-box.xlsx</h6>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-3 col-md-6 col-sm-6">
-                        <div class="card card-block card-stretch card-height">
-                            <div class="card-body image-thumb doc-text">
-                                <a href="#" data-file-id="3" class="load-file-modal" data-toggle="modal" data-target="#file-modal">
-                                    <div class="mb-4 text-center p-3 rounded iq-thumb">
-                                        <div class="iq-image-overlay"></div>
-                                        <img src="./assets/images/layouts/page-1/ppt.png" class="img-fluid" alt="image1">
-                                    </div>
-                                    <h6>IOS-content.pptx</h6>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
+                        <?php endforeach ?>
+                    <?php endif ?>
+
+
+
+
+
                     <div class="col-lg-12">
                         <div class="card card-block card-stretch card-transparent">
                             <div class="card-header d-flex justify-content-between pb-0">
@@ -192,126 +192,44 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-6 col-sm-6 col-lg-3">
-                        <div class="card card-block card-stretch card-height">
-                            <div class="card-body">
-                                <div class="d-flex justify-content-between">
-                                    <a href="JavaScript:Void(0)" class="folder">
-                                        <div class="icon-small bg-danger rounded mb-4">
-                                            <i class="ri-file-copy-line"></i>
-                                        </div>
-                                    </a>
-                                    <div class="card-header-toolbar">
-                                        <div class="dropdown">
-                                            <span class="dropdown-toggle" data-toggle="dropdown">
-                                                <i class="ri-more-2-fill"></i>
-                                            </span>
-                                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton2">
-                                                <a class="dropdown-item" href="./folder?id=2"><i class="ri-eye-fill mr-2"></i>View</a>
-                                                <a class="dropdown-item" href="#"><i class="ri-pencil-fill mr-2"></i>Edit</a>
+                    <?php if ($user_folders_count == 0): ?>
+                        <div class="col-12">
+                            You have not created any folders yet!
+                        </div>
+                    <?php else: ?>
+                        <?php foreach ($user_folders as $folder): ?>
+                            <div class="col-md-6 col-sm-6 col-lg-3">
+                                <div class="card card-block card-stretch card-height">
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-between">
+                                            <a href="JavaScript:Void(0)" class="folder">
+                                                <div class="icon-small bg-danger rounded mb-4">
+                                                    <i class="ri-file-copy-line"></i>
+                                                </div>
+                                            </a>
+                                            <div class="card-header-toolbar">
+                                                <div class="dropdown">
+                                                    <span class="dropdown-toggle" data-toggle="dropdown">
+                                                        <i class="ri-more-2-fill"></i>
+                                                    </span>
+                                                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton2">
+                                                        <a class="dropdown-item" href="./folder?id=<?php echo $folder['id'] ?>"><i class="ri-eye-fill mr-2"></i>View</a>
+                                                        <a class="dropdown-item" href="#"><i class="ri-pencil-fill mr-2"></i>Edit</a>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
+                                        <a href="./folder?id=<?php echo $folder['id'] ?>" class="folder">
+                                            <h5 class="mb-2"><?php echo $folder['folder_name'] ?></h5>
+                                            <p class="mb-2"><i class="fa fa-calendar text-danger mr-2 font-size-20"></i> <?php echo format_date($folder['created_at']) ?></p>
+                                            <p class="mb-0"><i class="fa fa-file text-danger mr-2 font-size-20"></i> <?php echo $user_folder_obj->user_folder_files_num($folder['id']) ?> Files</p>
+                                        </a>
+                                        </a>
                                     </div>
                                 </div>
-                                <a href="./folder?id=2" class="folder">
-                                    <h5 class="mb-2">Alexa Workshop</h5>
-                                    <p class="mb-2"><i class="fa fa-calendar text-danger mr-2 font-size-20"></i> 10 Dec, 2020</p>
-                                    <p class="mb-0"><i class="fa fa-file text-danger mr-2 font-size-20"></i> 08 Files</p>
-                                </a>
-                                </a>
                             </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6 col-sm-6 col-lg-3">
-                        <div class="card card-block card-stretch card-height">
-                            <div class="card-body">
-                                <div class="d-flex justify-content-between">
-                                    <a href="JavaScript:Void(0)" class="folder">
-                                        <div class="icon-small bg-danger rounded mb-4">
-                                            <i class="ri-file-copy-line"></i>
-                                        </div>
-                                    </a>
-                                    <div class="card-header-toolbar">
-                                        <div class="dropdown">
-                                            <span class="dropdown-toggle" data-toggle="dropdown">
-                                                <i class="ri-more-2-fill"></i>
-                                            </span>
-                                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton2">
-                                                <a class="dropdown-item" href="./folder?id=2"><i class="ri-eye-fill mr-2"></i>View</a>
-                                                <a class="dropdown-item" href="#"><i class="ri-pencil-fill mr-2"></i>Edit</a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <a href="./folder?id=2" class="folder">
-                                    <h5 class="mb-2">Alexa Workshop</h5>
-                                    <p class="mb-2"><i class="fa fa-calendar text-danger mr-2 font-size-20"></i> 10 Dec, 2020</p>
-                                    <p class="mb-0"><i class="fa fa-file text-danger mr-2 font-size-20"></i> 08 Files</p>
-                                </a>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6 col-sm-6 col-lg-3">
-                        <div class="card card-block card-stretch card-height">
-                            <div class="card-body">
-                                <div class="d-flex justify-content-between">
-                                    <a href="JavaScript:Void(0)" class="folder">
-                                        <div class="icon-small bg-danger rounded mb-4">
-                                            <i class="ri-file-copy-line"></i>
-                                        </div>
-                                    </a>
-                                    <div class="card-header-toolbar">
-                                        <div class="dropdown">
-                                            <span class="dropdown-toggle" data-toggle="dropdown">
-                                                <i class="ri-more-2-fill"></i>
-                                            </span>
-                                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton2">
-                                                <a class="dropdown-item" href="./folder?id=2"><i class="ri-eye-fill mr-2"></i>View</a>
-                                                <a class="dropdown-item" href="#"><i class="ri-pencil-fill mr-2"></i>Edit</a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <a href="./folder?id=2" class="folder">
-                                    <h5 class="mb-2">Alexa Workshop</h5>
-                                    <p class="mb-2"><i class="fa fa-calendar text-danger mr-2 font-size-20"></i> 10 Dec, 2020</p>
-                                    <p class="mb-0"><i class="fa fa-file text-danger mr-2 font-size-20"></i> 08 Files</p>
-                                </a>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6 col-sm-6 col-lg-3">
-                        <div class="card card-block card-stretch card-height">
-                            <div class="card-body">
-                                <div class="d-flex justify-content-between">
-                                    <a href="JavaScript:Void(0)" class="folder">
-                                        <div class="icon-small bg-danger rounded mb-4">
-                                            <i class="ri-file-copy-line"></i>
-                                        </div>
-                                    </a>
-                                    <div class="card-header-toolbar">
-                                        <div class="dropdown">
-                                            <span class="dropdown-toggle" data-toggle="dropdown">
-                                                <i class="ri-more-2-fill"></i>
-                                            </span>
-                                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton2">
-                                                <a class="dropdown-item" href="./folder?id=2"><i class="ri-eye-fill mr-2"></i>View</a>
-                                                <a class="dropdown-item" href="#"><i class="ri-pencil-fill mr-2"></i>Edit</a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <a href="./folder?id=2" class="folder">
-                                    <h5 class="mb-2">Alexa Workshop</h5>
-                                    <p class="mb-2"><i class="fa fa-calendar text-danger mr-2 font-size-20"></i> 10 Dec, 2020</p>
-                                    <p class="mb-0"><i class="fa fa-file text-danger mr-2 font-size-20"></i> 08 Files</p>
-                                </a>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
+                        <?php endforeach ?>
+                    <?php endif ?>
                 </div>
             </div>
         </div>
