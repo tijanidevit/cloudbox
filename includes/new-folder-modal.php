@@ -8,7 +8,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form action="./folders" method="post">
+                <form id="folderForm" method="post">
                     <div class="form-group">
                         <label for="">Folder Name</label>
                         <input type="text" name="folder_name" class="form-control" required="required" />

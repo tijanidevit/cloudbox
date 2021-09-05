@@ -3,7 +3,7 @@
 
     class user_folders extends DB{
 
-        function register($user_id,$folder_name){
+        function create($user_id,$folder_name){
             return DB::execute("INSERT INTO user_folders(user_id,folder_name) VALUES(?,?)", [$user_id,$folder_name]);
         }
         
@@ -25,8 +25,8 @@
             return DB::num_row("SELECT id FROM user_folders ", []);
         }
 
-        function check_folder_name_existence($folder_name){
-            return DB::num_row("SELECT id FROM user_folders WHERE folder_name = ? ", [$folder_name]);
+        function check_folder_existence($folder_name,$user_id){
+            return DB::num_row("SELECT id FROM user_folders WHERE folder_name = ? AND user_id = ? ", [$folder_name,$user_id]);
         }
 
         function login($folder_name){
