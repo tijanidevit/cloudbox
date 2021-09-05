@@ -9,6 +9,7 @@
             </div>
             <div class="modal-body">
                 <form id="folderForm" method="post">
+                    <div id="result"></div>
                     <div class="form-group">
                         <label for="">Folder Name</label>
                         <input type="text" name="folder_name" class="form-control" required="required" />

@@ -12,19 +12,22 @@
 		if (isset($_POST['folder_name'])) {
 
 			$folder_name = $_POST['folder_name'];
-			$password = $_SESSION['cloud_user']['id'];
+			$user_id = $_SESSION['cloud_user']['id'];
 
 
 			if ($user_folder_obj->check_folder_existence($folder_name,$user_id)) {
-				return displayWarning('You have already been createed this folder. Try a unique one');
+				return displayWarning('You have already been created this folder. Try a unique one');
 			}
 			
 			if ($user_folder_obj->create($user_id,$folder_name)) {
-				return $user_obj->fetch_limited_user_folders($user_id,1);
+				return displaySuccess('Folder Successfully Created.');
 			}
 			else{
 				return displayWarning('Error With Server! Try again.');
 			}
+		}
+		else{
+			return displayWarning('No input made.');
 		}
 	}
 ?>

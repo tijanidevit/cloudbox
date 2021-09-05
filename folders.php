@@ -127,15 +127,18 @@
                 $('#btnText').hide();
             },
             success: function(data){
-                if (!isNaN(data)) {
-                    location.href = 'folder?id='+data;
+                
+                $('#result').html(data);
+                $('#result').fadeIn();
+                $('#spinner').hide();
+                $('#btnText').show();
+
+                if (data.includes('Success')) {
+                    location.reload();
                 }
-                else{
-                    $('#result').html(data);
-                    $('#result').fadeIn();
-                    $('#spinner').hide();
-                    $('#btnText').show();
-                }
+                
+
+                console.log(data);
             }
         })
     })
